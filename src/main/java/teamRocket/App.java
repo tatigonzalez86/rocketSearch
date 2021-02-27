@@ -1,17 +1,16 @@
+// Search engine code Written By:
+//Angel Remigio, Brittany Weaver, Douglas Lee, Nilser 'Tatiana' Gonzalez
+//This is a search engine that searches for key words/phrases from a local directory.
+
+
 package teamRocket;
 
-/**
- * Hello world!
- *
- */
+
 public class App 
 {
     public static void main( String[] args )
     {
-
-
-        System.out.println("Trying to test push.");
-
-        System.out.println( "Hello World!" );
+    	
+    	new CreateGUI();
     }
 }
