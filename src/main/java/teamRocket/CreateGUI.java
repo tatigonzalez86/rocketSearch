@@ -1,15 +1,20 @@
 package teamRocket;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+
 import javax.swing.*;
 
 public class CreateGUI {
 	private JFrame frame;
 	private JPanel panel;
 	private JPanel btnPanel;
+	private JPanel srchPanel;
+	private ButtonGroup BG;
 	
 	public CreateGUI() {
 		
+		// Create initial frames and panels to hold search bar and search settings buttons.
 		frame = new JFrame();
 		
 		panel = new JPanel();
@@ -18,13 +23,13 @@ public class CreateGUI {
 		btnPanel = new JPanel();
 		btnPanel.setLayout(new BoxLayout(btnPanel, BoxLayout.Y_AXIS));
 		
+		srchPanel = new JPanel();
+		srchPanel.setLayout(new BoxLayout(srchPanel, BoxLayout.X_AXIS));
+		
 		
 		frame.add(panel);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setTitle("Rocket Search");
-		
-		
-		
 		
 		
 		JButton searchButton = new JButton("Search");
@@ -41,14 +46,22 @@ public class CreateGUI {
 		JRadioButton andButton = new JRadioButton(andSearch);
 		JRadioButton anyButton = new JRadioButton(anySearch);
 		
+		// Button Group makes only one search setting selectable at a time.
+		BG = new ButtonGroup();
+		BG.add(exactButton);
+		BG.add(anyButton);
+		BG.add(andButton);
+		
 		btnPanel.add(exactButton);
 		btnPanel.add(andButton);
 		btnPanel.add(anyButton);
 		
-		panel.add(fileManagerButton, BorderLayout.LINE_END);
+		
+		srchPanel.add(searchButton);
+		srchPanel.add(fileManagerButton);
 		panel.add(searchField, BorderLayout.PAGE_START);
-		panel.add(searchButton, BorderLayout.CENTER);
 		panel.add(btnPanel, BorderLayout.LINE_START);
+		panel.add(srchPanel, BorderLayout.CENTER);
 		
 		frame.setContentPane(panel);
 		frame.pack();
