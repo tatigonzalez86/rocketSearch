@@ -2,10 +2,12 @@ package teamRocket;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
-public class CreateGUI {
+public class CreateGUI implements ActionListener{
 	private JFrame frame;
 	private JPanel panel;
 	private JPanel btnPanel;
@@ -35,6 +37,7 @@ public class CreateGUI {
 		JButton searchButton = new JButton("Search");
 		
 		JButton fileManagerButton = new JButton("File Manager");
+		fileManagerButton.addActionListener(this);
 		
 		JTextField searchField = new JTextField("Enter search here");
 		
@@ -66,6 +69,10 @@ public class CreateGUI {
 		frame.setContentPane(panel);
 		frame.pack();
 		frame.setVisible(true);
+	}
+
+	public void actionPerformed(ActionEvent e) {
+		new FileManager();
 	}
 }
 
