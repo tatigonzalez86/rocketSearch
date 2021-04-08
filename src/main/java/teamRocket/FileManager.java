@@ -123,3 +123,8 @@ public class FileManager implements ActionListener{
 
 		}
 }
+ public long addFile(String fileName) {
+        long document = Main.ID;
+        ++Main.ID;
+        file = new File(Name);
+        FileItem final = new FileItem(document, Name);
