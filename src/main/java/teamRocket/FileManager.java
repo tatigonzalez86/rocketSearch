@@ -3,6 +3,9 @@ package teamRocket;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.IOException;
 
 import javax.swing.*;
 
@@ -13,13 +16,10 @@ public class FileManager implements ActionListener{
 	private JPanel buttonpanel;
 	private JTable table;
 	private JLabel label;
-	private JButton addFile;
+	private JButton addFileBtn;
 	private JButton removeFile;
-	
-	private enum Actions{
-		ADD,
-		REMOVE
-	}
+
+
 	
 	public FileManager() {
 		frame = new JFrame("File Manager");
@@ -32,13 +32,18 @@ public class FileManager implements ActionListener{
 		table = new JTable(20, 2);
 		table.setValueAt("File Path", 0, 0);
 		table.setValueAt("Last Editted", 0, 1);
+
 		
-		addFile = new JButton("Add Files");
-		addFile.setActionCommand(Actions.ADD.name());
-		addFile.addActionListener(this);
-		
+		addFileBtn = new JButton("Add Files...");
+		addFileBtn.setActionCommand( "ADD" );
+		addFileBtn.setToolTipText( "Select a file to add to the index" );
+		addFileBtn.addActionListener(ae->{addFile();});
+		addFileBtn.setMnemonic(KeyEvent.VK_A);
+
+
+
 		removeFile = new JButton("Remove Files");
-		removeFile.setActionCommand(Actions.REMOVE.name());
+		removeFile.setActionCommand("Remove");
 		removeFile.addActionListener(this);
 		
 		label = new JLabel("Here there be files");
@@ -50,7 +55,7 @@ public class FileManager implements ActionListener{
 		frame.setResizable(false);
 		labelpanel.add(label);
 		
-		buttonpanel.add(addFile);
+		buttonpanel.add(addFileBtn);
 		buttonpanel.add(removeFile);
 		
 		
@@ -63,15 +68,58 @@ public class FileManager implements ActionListener{
 	
 	// Unimplemented buttons to add and remove file persistence.
 	
-	/*
+
 	public void actionPerformed(ActionEvent e) {
-		if (evt.getActionCommand() == Actions.ADD.name()) {
-			// Add file method
-		}
-		if (evt.getActionCommand() == Actions.REMOVE.name()) {
+
+		if (e.getActionCommand() == "Remove") {
 			// remove file method
 		}
 	}
-	*/
-	
+	//this is a method that gives you the option to add a file.
+
+
+	void addFile(){
+
+			//display a jfile chooser
+		try {
+			UIManager.setLookAndFeel(
+					UIManager.getSystemLookAndFeelClassName() );
+		} catch (Exception e) {} // Too bad; use Java's default LaF
+
+		SwingUtilities.invokeLater(()-> {
+			//creates file chooser
+				JFileChooser fileChooser = new JFileChooser(".");
+				//opens file dialog
+			//status indicates if user hits ok or cancel
+
+			int status = fileChooser.showOpenDialog(null);
+				File selectedFile;
+				//if they clicked ok the status is approved if not it is something else. returning to file method.
+				if (status == JFileChooser.APPROVE_OPTION) {
+					selectedFile = fileChooser.getSelectedFile();
+				} else
+					return;
+
+				addFileToList(selectedFile);
+
+
+				// open file reading it one line at a time and updating index.
+			});
+
+		}
+
+
+		//this method takes the selected file displaying it to the gui and adding it to the list.
+		void addFileToList(File selectedFile){
+
+			//add file  to the table
+
+			try {
+				table.setValueAt(selectedFile.getCanonicalFile(), 1,0);
+				table.setValueAt(selectedFile.lastModified(),1,1);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+		}
 }
