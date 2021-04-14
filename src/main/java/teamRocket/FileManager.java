@@ -4,10 +4,30 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.TimeZone;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileSystemView;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.util.StdDateFormat;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 public class FileManager implements ActionListener{
 	private JFrame frame;
@@ -18,7 +38,6 @@ public class FileManager implements ActionListener{
 	private JLabel label;
 	private JButton addFileBtn;
 	private JButton removeFile;
-
 
 	
 	public FileManager() {
@@ -44,7 +63,11 @@ public class FileManager implements ActionListener{
 
 		removeFile = new JButton("Remove Files");
 		removeFile.setActionCommand("Remove");
+		removeFile.setToolTipText( "Delete selected rows from table" );
 		removeFile.addActionListener(this);
+		removeFile.setMnemonic(KeyEvent.VK_R);
+		
+		
 		
 		label = new JLabel("Here there be files");
 		label.setFont(new Font("Times New Roman", Font.BOLD + Font.ITALIC, 24));
@@ -73,6 +96,8 @@ public class FileManager implements ActionListener{
 
 		if (e.getActionCommand() == "Remove") {
 			// remove file method
+			table.setValueAt("", table.getSelectedRow(), 0);
+			table.setValueAt("", table.getSelectedRow(), 1);
 		}
 	}
 	//this is a method that gives you the option to add a file.
@@ -99,11 +124,27 @@ public class FileManager implements ActionListener{
 					selectedFile = fileChooser.getSelectedFile();
 				} else
 					return;
-
+				
 				addFileToList(selectedFile);
-
-
+				
 				// open file reading it one line at a time and updating index.
+				readFile(selectedFile);
+				
+				ObjectMapper mapper = new ObjectMapper();
+				String json;
+				// creates the json object using the hashmap index, outputs the json to index.txt in the user documents folder
+				try {
+					json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(index);
+					Path home = Paths.get(System.getProperty("user.home") + File.separator + "Documents");
+					FileWriter output = new FileWriter(home + "/index.txt");
+					output.write(json);
+					output.close();
+				} catch (JsonProcessingException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				
 			});
 
 		}
@@ -122,9 +163,44 @@ public class FileManager implements ActionListener{
 			}
 
 		}
-}
+		
+		Map<String, Integer> index = new HashMap<>();
+		
+		void readFile(File selectedFile) {
+			// reads the file and counts the number of times each word appears in the text and enters values into a map.
+			// keys are words and values are how many times they appear.
+			try {
+				File input = selectedFile;
+				Scanner myReader = new Scanner(input);
+				while (myReader.hasNextLine()) {
+					String data = myReader.nextLine();
+					data.trim();
+					String[] words = data.split(" ");
+					int i = 0;
+					String x;
+					int count;
+					for (i = 0; i < words.length; i ++) {
+						x = words[i];
+						if (index.containsKey(x)) {
+							count = index.get(x);
+							index.put(x, count + 1);
+						}
+						else {
+							index.put(x, 1);
+						}
+					}
+					System.out.println(data);
+				}
+				myReader.close();
+				index.remove("");
+			} catch (FileNotFoundException e) {
+				System.out.println("File not Found");
+			}
+		}
+/*
  public long addFile(String fileName) {
         long document = Main.ID;
         ++Main.ID;
         file = new File(Name);
-        FileItem final = new FileItem(document, Name);
+        FileItem final = new FileItem(document, Name);}*/
+}
