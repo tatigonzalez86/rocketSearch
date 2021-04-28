@@ -197,25 +197,7 @@ public class FileManager implements ActionListener{
 				System.out.println("File not Found");
 			}
 		}
-	 this.searchBtn.addActionListener(new ActionListener() {
-            public void performance(final ActionEvent evnt) {
-                switch (Main.this.selectedSearch) {
-				
-                    case AND: {
-                        IndexUtils.doAndSearch(Main.this.searchTerms.getText(), Main.this.results);
-                        break;
-			    
-                    }
-                    case OR: {
-                        IndexUtils.doOrSearch(Main.this.searchTerms.getText(), Main.this.results);
-                        break;
-			    
-                    }
-                    case PHRASE: {
-                        IndexUtils.doPhraseSearch(Main.this.searchTerms.getText(), Main.this.results);
-                        break;
-			    
-                    }
+
 /*
  public long addFile(String fileName) {
         long document = Main.ID;
