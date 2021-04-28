@@ -160,6 +160,11 @@ public class FileManager implements ActionListener{
 				table.setValueAt(selectedFile.lastModified(),1,1);
 			} catch (IOException e) {
 				e.printStackTrace();
+				  Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+
+        public void run() {
+        }
+    }));
 			}
 
 		}
