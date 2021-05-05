@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.swing.*;
 
@@ -13,7 +15,7 @@ public class CreateGUI implements ActionListener{
 	private JPanel btnPanel;
 	private JPanel srchPanel;
 	private ButtonGroup BG;
-	
+	private JTextField searchField;
 	public CreateGUI() {
 		
 		// Create initial frames and panels to hold search bar and search settings buttons.
@@ -35,11 +37,12 @@ public class CreateGUI implements ActionListener{
 		
 		
 		JButton searchButton = new JButton("Search");
-		
+		searchButton.addActionListener(ae->{ searchButton_Click();});
+
 		JButton fileManagerButton = new JButton("File Manager");
 		fileManagerButton.addActionListener(this);
 		
-		JTextField searchField = new JTextField("Enter search here");
+		 searchField = new JTextField("Enter search here");
 		
 		String andSearch = "Must match ALL terms";
 		String exactSearch = "Search for EXACT PHRASE";
@@ -70,7 +73,38 @@ public class CreateGUI implements ActionListener{
 		frame.pack();
 		frame.setVisible(true);
 	}
+	// search button click
+	//Brittany Weaver - A map was created below to represent the pseudo files to search through.
+	public void searchButton_Click(){
+		System.out.println("Create GUI searchButton_Click");
+		HashMap<String, ArrayList<Integer>> mapFile = new HashMap<>();
+		ArrayList<Integer> listNum = new ArrayList<>();
+		ArrayList<ArrayList<Integer>> listFound = new ArrayList<>();
+		listNum.add(2);
+		mapFile.put("a", listNum);
+		mapFile.put("banana", listNum);
+		listNum.clear();
+		listNum.add(0);
+		listNum.add(1);
+		listNum.add(2);
+		mapFile.put("is", listNum);
+		mapFile.put("it", listNum);
+		listNum.clear();
+		listNum.add(0);
+		listNum.add(1);
+		mapFile.put("what", listNum);
 
+		String getTxt = searchField.getText();
+		for(String word:mapFile.keySet()){
+			if(getTxt.equals(word)){
+				listFound.add(mapFile.get(word));
+
+			}
+		}
+		System.out.println("getTxt" + getTxt);
+		System.out.println("mapFile" + mapFile.toString());
+		System.out.println("listFound" + listFound);
+	}
 	public void actionPerformed(ActionEvent e) {
 		new FileManager();
 	}
